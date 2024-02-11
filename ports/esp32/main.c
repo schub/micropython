@@ -54,6 +54,8 @@
 #include "shared/timeutils/timeutils.h"
 #include "mbedtls/platform_time.h"
 
+#include <esp_task_wdt.h>
+
 #include "uart.h"
 #include "usb.h"
 #include "usb_serial_jtag.h"
@@ -78,6 +80,11 @@
 #else
 #define MP_TASK_STACK_LIMIT_MARGIN (1024)
 #endif
+
+void esp_task_wdt_isr_user_handler(void) {
+    gpio_set_level(1, 0);
+    gpio_set_level(2, 0);
+}
 
 int vprintf_null(const char *format, va_list ap) {
     // do nothing: this is used as a log target during raw repl mode
